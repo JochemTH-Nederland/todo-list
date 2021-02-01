@@ -1,0 +1,10 @@
+p {
+    display: inline-block;
+    width: 200px;
+}
+
+.side-button {
+    display: inline-block;
+    position: relative;
+    left: 10px;
+}
