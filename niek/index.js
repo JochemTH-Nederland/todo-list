@@ -23,16 +23,6 @@ const item = {
  * Init the todo list
  */
 function init(){
-
-    /*
-    fetch('http://localhost:8000/index.php', {
-        method: "POST",
-        headers:{
-            'Content-Type': 'application/json',
-            // 'Response-Type' : "text/plain",
-        }
-    }).then(async response => console.log(await response.json()));
-    */
     /**
      * Add event listener to the button
      */

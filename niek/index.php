@@ -3,27 +3,22 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Headers: *');
 header('Access-Control-Allow-Origin: *');
 
-$items = json_decode(file_get_contents(__DIR__."/todolist.json"), true);
+$items = file_get_contents(__DIR__."/todolist.json");
 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     
-    $newTodoList = [];
+    $items = json_decode($items, true);
     $json = json_decode(file_get_contents('php://input'), true);
 
     array_push($items, $json);
 
     $items = json_encode($items,true);
-
     WriteToJSON($items);
 
 
 } else if($_SERVER['REQUEST_METHOD'] == "GET"){
-    //Return all items
-/**
- * Retrieve the current stored todo list
- */
 
-    //$todoList = json_decode(file_get_contents("todolist.json"), true);
+    echo $items;
 
 } else {
     die("die");
@@ -38,5 +33,5 @@ function WriteToJSON($inputJson) {
     }
 
     file_put_contents(__DIR__."/todolist.json", $inputJson);
-    echo "Success";
+
 }
