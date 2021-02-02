@@ -1,3 +1,15 @@
+/*
+   //Example request
+    fetch("index.php", {
+        method: "GET", //The HTTP method
+        headers: {
+            'Content-Type': 'application/json' //JSON content type
+        },
+        body: JSON.stringify(data) //The data to be sent
+    }).then(response => console.log(response.json()));
+ */
+
+
 const todoListContent = document.getElementById('todo-list');
 const addItemButton = document.getElementById('add-item');
 const newItemInput = document.getElementById('new-item-input');
