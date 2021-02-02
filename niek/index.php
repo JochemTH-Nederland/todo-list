@@ -1,4 +1,6 @@
 <?php
+header('Access-Control-Allow-Headers: *');
+header('Access-Control-Allow-Origin: *');
 
 /**
  * Retrieve the current stored todo list
@@ -19,7 +21,11 @@ switch ($_SERVER['REQUEST_METHOD']){
 
 //Code here
 
+
+
 /**
  * Store the new todo list
  */
 file_put_contents("todolist.json", json_encode($newTodoList));
+
+echo "Script executed";
