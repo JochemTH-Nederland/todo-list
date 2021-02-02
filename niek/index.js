@@ -57,14 +57,13 @@ function addItem(){
         return;
     }
 
-    items.push({
-        ...item,
-        message: value,
-    });
+    const _item = {...item, message: value};
+
+    items.push(_item);
     newItemInput.value = "";
     render();
 
-    postItem("http://localhost:8000/index.php", items[0]);
+    postItem("http://localhost:8000/index.php", _item);
 }
 
 // Example POST method implementation:
@@ -75,19 +74,11 @@ function addItem(){
         headers: {
         'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data)
     }
 
-    console.log(fetchData);
-
     fetch(url, fetchData)
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+      .then(response => console.log("Succesfully sended item to JSON."));
     }
 
 /**
