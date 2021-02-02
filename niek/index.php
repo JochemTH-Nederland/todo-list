@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json');
 header('Access-Control-Allow-Headers: *');
 header('Access-Control-Allow-Origin: *');
 
@@ -9,18 +10,18 @@ $todoList = json_decode(file_get_contents("todolist.json"), true);
 
 $newTodoList = [];
 
+if($_SERVER['REQUEST_METHOD'] == "POST"){
+    $requestData = &$_POST;
 
-switch ($_SERVER['REQUEST_METHOD']){
-    case "POST": //Add or update a list item
-        $requestData = $_POST;
-        break;
-    case "GET": //Retrieve all or a single list item
-        $requestData = $_GET;
-        break;
+} else if($_SERVER['REQUEST_METHOD'] == "GET"){
+    $requestData = &$_GET;
+
+} else {
+    die("die");
 }
 
 //Code here
-
+var_dump($requestData);
 
 
 /**

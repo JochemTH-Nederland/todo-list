@@ -24,13 +24,15 @@ const item = {
  */
 function init(){
 
-    fetch('http://localhost:9000/index.php', {
+    /*
+    fetch('http://localhost:8000/index.php', {
         method: "POST",
         headers:{
             'Content-Type': 'application/json',
             // 'Response-Type' : "text/plain",
         }
     }).then(async response => console.log(await response.json()));
+    */
     /**
      * Add event listener to the button
      */
@@ -61,7 +63,32 @@ function addItem(){
     });
     newItemInput.value = "";
     render();
+
+    postItem("http://localhost:8000/index.php", items[0]);
 }
+
+// Example POST method implementation:
+    function postItem(url = '', data = {}) {
+
+    let fetchData = {
+        method: 'POST', // or 'PUT'
+        headers: {
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    }
+
+    console.log(fetchData);
+
+    fetch(url, fetchData)
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    }
 
 /**
  * Save the new value of the item
