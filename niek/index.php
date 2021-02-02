@@ -8,25 +8,19 @@ header('Access-Control-Allow-Origin: *');
  */
 $todoList = json_decode(file_get_contents("todolist.json"), true);
 
-$newTodoList = [];
 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
-    $requestData = &$_POST;
+    $newTodoList = [];
+    $json = file_get_contents('php://input');
+    var_dump(json_decode($json, true));
 
+    /**
+     * Store the new todo list
+     */
+    file_put_contents("todolist.json", json_encode($newTodoList));
 } else if($_SERVER['REQUEST_METHOD'] == "GET"){
-    $requestData = &$_GET;
+    //Return all items
 
 } else {
     die("die");
 }
-
-//Code here
-var_dump($requestData);
-
-
-/**
- * Store the new todo list
- */
-file_put_contents("todolist.json", json_encode($newTodoList));
-
-echo "Script executed";
