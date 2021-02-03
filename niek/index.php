@@ -9,12 +9,26 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     
     $items = json_decode($items, true);
     $json = json_decode(file_get_contents('php://input'), true);
-    
-    array_push($items, $json);
 
-    $items = json_encode($items,true);
-    WriteToJSON($items);
+    if(!array_key_exists('itemIndex', $json)) {
 
+        var_dump("Add");
+
+        array_push($items, $json);
+
+        $items = json_encode($items,true);
+        WriteToJSON($items);
+        
+    } else {
+
+        var_dump("Remove");
+
+        array_splice($items, $json['itemIndex'], 1);
+
+        $items = json_encode($items,true);
+        WriteToJSON($items);
+
+    }
 
 } else if($_SERVER['REQUEST_METHOD'] == "GET"){
 

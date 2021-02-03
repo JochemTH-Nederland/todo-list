@@ -55,11 +55,11 @@ function addItem(){
     newItemInput.value = "";
     render();
 
-    postItem("http://localhost:8000/index.php", _item);
+    postItemToJSON("http://localhost:8000/index.php", _item);
 }
 
 // Example POST method implementation:
-    function postItem(url = '', data = {}) {
+    function postItemToJSON(url = '', data = {}) {
 
     let fetchData = {
         method: 'POST', // or 'PUT'
@@ -67,11 +67,25 @@ function addItem(){
         'Content-Type': 'application/json',
         },
         body: JSON.stringify(data)
-    }
+    };
 
     fetch(url, fetchData)
       .then(response => console.log(response.json));
-    }
+    };
+
+    function removeItemFromJSON(url = '', id) {
+
+        let fetchData = {
+            method: 'POST', // or 'PUT'
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({itemIndex: id})
+        };
+    
+        fetch(url, fetchData)
+          .then(response => console.log(response.json));
+        };
 
 
     async function loadItems(url = '') {
@@ -91,7 +105,7 @@ function addItem(){
                     json.forEach(element => items.push(element));
                     render();
                 }
-                
+
           });
         });
     }
@@ -111,7 +125,11 @@ function saveItem(index){
  * @param index
  */
 function removeItem(index){
+    
     items.splice(index, 1);
+
+    removeItemFromJSON("http://localhost:8000/index.php", index);
+
     render();
 }
 
