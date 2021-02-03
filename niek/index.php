@@ -9,7 +9,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     
     $items = json_decode($items, true);
     $json = json_decode(file_get_contents('php://input'), true);
-
+    
     array_push($items, $json);
 
     $items = json_encode($items,true);

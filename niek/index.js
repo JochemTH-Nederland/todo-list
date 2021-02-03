@@ -28,6 +28,8 @@ function init(){
      */
     addItemButton.addEventListener('click', (event) => addItem());
 
+    loadItems("http://localhost:8000/index.php");
+
     /**
      * Initial content render
      */
@@ -68,7 +70,30 @@ function addItem(){
     }
 
     fetch(url, fetchData)
-      .then(response => console.log("Succesfully sended item to JSON."));
+      .then(response => console.log(response.json));
+    }
+
+
+    async function loadItems(url = '') {
+    
+        let fetchData = {
+            method: 'GET', // or 'PUT'
+            headers: {
+            'Content-Type': 'application/json',
+            },
+        }
+
+        fetch(url,fetchData)
+        .then(response => {
+            response.json().then(json => {
+            
+                if(json.length > 0) {
+                    json.forEach(element => items.push(element));
+                    render();
+                }
+                
+          });
+        });
     }
 
 /**
