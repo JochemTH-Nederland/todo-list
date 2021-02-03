@@ -28,7 +28,7 @@ function init(){
      */
     addItemButton.addEventListener('click', (event) => addItem());
 
-    loadItems("http://localhost:8000/index.php");
+    loadItemsFromJSON("http://localhost:8000/index.php");
 
     /**
      * Initial content render
@@ -55,24 +55,34 @@ function addItem(){
     newItemInput.value = "";
     render();
 
-    postItemToJSON("http://localhost:8000/index.php", _item);
+    postItemToJSON("http://localhost:8000/index.php", _item, items.length - 1);
 }
 
-// Example POST method implementation:
-    function postItemToJSON(url = '', data = {}) {
+    /**
+     * Post item to JSON
+     * @type {{url: string, data: object, id: int}}
+     */
+    function postItemToJSON(url = '', data = {}, id) {
 
     let fetchData = {
-        method: 'POST', // or 'PUT'
+        method: 'POST',
         headers: {
         'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({
+            itemIndex: id,
+            ...data
+        })
     };
 
     fetch(url, fetchData)
       .then(response => console.log(response.json));
     };
 
+    /**
+     * Remove item to JSON
+     * @type {{url: string, id: int}}
+     */
     function removeItemFromJSON(url = '', id) {
 
         let fetchData = {
@@ -80,15 +90,21 @@ function addItem(){
             headers: {
             'Content-Type': 'application/json',
             },
-            body: JSON.stringify({itemIndex: id})
+            body: JSON.stringify({
+                itemIndex: id,
+                removeItems: true
+            })
         };
     
         fetch(url, fetchData)
           .then(response => console.log(response.json));
         };
 
-
-    async function loadItems(url = '') {
+    /**
+     * Load items from JSON
+     * @type {{url: string}}
+     */
+    async function loadItemsFromJSON(url = '') {
     
         let fetchData = {
             method: 'GET', // or 'PUT'
@@ -116,7 +132,13 @@ function addItem(){
  */
 function saveItem(index){
     const value = document.getElementById('input-item-' + index).value;
-    items.splice(index, 1, {message: value, editing: false});
+    const _item = {message: value, editing: false};
+
+    items.splice(index, 1, _item);
+
+    removeItemFromJSON("http://localhost:8000/index.php", index);
+    postItemToJSON("http://localhost:8000/index.php", _item, index);
+
     render();
 }
 
