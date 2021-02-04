@@ -174,20 +174,24 @@ function toggleEditItem(index){
  */
 function itemHtml(index, item){
     return `<div class="row item">
-    <div class="col-8 col-sm-8 col-md-6 col-lg-6 col-xl-6 pt-1 rounded items small-box-shadow pt-3">  
-    ${item.editing ? '<input class="input-width edit-input mt-4 mt-sm-4 mt-md-1 mt-lg-1 mt-xl-1" id="input-item-'+index+'" type="text" value="'+item.message+'">' : '<span class="todo-text">'+item.message+'</span>'}
+    <div class="col-11 col-sm-11 col-md-6 col-lg-6 col-xl-6 pt-1 rounded items small-box-shadow pt-3">  
+    ${item.editing ? '<input class="input-width" id="input-item-'+index+'" type="text" value="'+item.message+'">' : '<span class="todo-text">'+item.message+'</span>'}
     </div>
-    <div class="col-3 col-sm-3 col-md-5 col-lg-5 col-xl-5 d-flex justify-content-start align-self-center justify-content-sm-start justify-content-md-start justify-content-lg-start justify-content-xl-start pt-3">
+    <div class="col-12 col-sm-12 col-md-5 col-lg-5 col-xl-5 d-flex justify-content-center justify-content-sm-center justify-content-md-start justify-content-lg-start justify-content-xl-start pt-3">
         <div ${!item.editing && 'hidden'} pb-3>
-           <button class="side-btn btn-success" onclick="saveItem(${index})"><i class="fas fa-save btn-icon"></i></button>
-           <button class="side-btn btn-danger" onclick="toggleEditItem(${index})"><i class="fas fa-times btn-icon"></i></button>
+           <button class="btn btn-success" onclick="saveItem(${index})">Save <i class="fas fa-save"></i></button>
+           <button class="btn btn-danger" onclick="toggleEditItem(${index})">Cancel <i class="fas fa-times"></i></button>
         </div>
         <div ${item.editing && 'hidden'} pb-3>
-           <button class="side-btn btn-warning type="button onclick="toggleEditItem(${index})"><i class="fas fa-pencil-alt btn-icon"></i></button>
-           <button class="side-btn btn-danger type="button" onclick="removeItem(${index})"><i class="fas fa-trash-alt btn-icon"></i></i></button>
+        <div class="input-group mb-3">
+        <div class="input-group-prepend">
+           <button class="btn btn-warning type="button onclick="toggleEditItem(${index})">Edit <i class="fas fa-pencil-alt"></i></button>
+           </div>
+           <button class="btn btn-danger type="button" onclick="removeItem(${index})">Remove <i class="fas fa-trash-alt"></i></i></button>
            </div>
         </div>
-    </div>`;
+    </div>
+</div>`;
 }
 
 /**
