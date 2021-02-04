@@ -1,1 +1,17 @@
-[{"itemIndex":0,"message":"Appels bestellen bij de Albert Heijn en er is nog een tros bananen in de aanbieding bij de Jumbo","editing":false},{"itemIndex":1,"message":"Kristallen minen in de voortuin","editing":false},{"itemIndex":2,"message":"Opzoek naar een goudhamster in het bos","editing":false},{"itemIndex":3,"message":"KiwiGalaxyDev website oppimpen","editing":false},{"itemIndex":4,"message":"Verjaardagskaart versturen naar de verstrooide buurman","editing":false},{"itemIndex":5,"message":"Monkey Wave devlog filmen","editing":false}]
+[
+  {
+    "itemIndex": 1,
+    "message": "Kristallen minen in de voortuin",
+    "editing": false
+  },
+  {
+    "itemIndex": 2,
+    "message": "Opzoek naar een goudhamster in het bos",
+    "editing": false
+  },
+  {
+    "itemIndex": 4,
+    "message": "Verjaardagskaart versturen naar de verstrooide buurman",
+    "editing": false
+  }
+]

@@ -3,8 +3,10 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Headers: *');
 header('Access-Control-Allow-Origin: *');
 
+const JSON_FILE_PATH = __DIR__."/todolist.json";
+
 // Get all items from JSON
-$items = file_get_contents(__DIR__."/todolist.json");
+$items = file_get_contents(JSON_FILE_PATH);
 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     
@@ -18,7 +20,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         array_splice($items, $json['itemIndex'], 0, [$json]);
         
         $items = json_encode($items,true);
-        WriteToJSON($items);
+        file_put_contents(JSON_FILE_PATH, $items);
         
         //If you want to remove items
     } else {
@@ -26,7 +28,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         array_splice($items, $json['itemIndex'], 1);
 
         $items = json_encode($items,true);
-        WriteToJSON($items);
+        file_put_contents(JSON_FILE_PATH, $items);
 
     }
 
@@ -37,17 +39,4 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
 } else {
     die("die");
-}
-
-//Write the object arrays to JSON
-function WriteToJSON($inputJson) {
-
-    $file = __DIR__ ."/todolist.json";
-
-    if(file_exists($file)) {
-        unlink($file);
-    }
-
-    file_put_contents(__DIR__."/todolist.json", $inputJson);
-
 }

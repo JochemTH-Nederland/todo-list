@@ -28,7 +28,7 @@ function init(){
      */
     addItemButton.addEventListener('click', (event) => addItem());
 
-    loadItemsFromJSON("http://localhost:8000/index.php");
+    loadItemsFromJSON("http://localhost:9000/index.php");
 
     /**
      * Initial content render
@@ -41,7 +41,7 @@ function init(){
  * reset the input value
  * render the content
  */
-function addItem(){
+async function addItem(){
     const value = newItemInput.value;
 
     if(!value){
@@ -55,8 +55,33 @@ function addItem(){
     newItemInput.value = "";
     render();
 
-    postItemToJSON("http://localhost:8000/index.php", _item, items.length - 1);
+    await sendRequest("POST", {
+        itemIndex: items.length - 1,
+        item: _item
+    });
 }
+
+    async function sendRequest(method, data = null){
+
+        const fetchData = {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: !!data && JSON.stringify(data)
+        }
+
+        const response = await fetch('http://localhost:9000/index.php', fetchData);
+        const json = await response.json();
+
+        if(method === "GET" && json.length > 0) {
+            json.forEach(element => items.push(element));
+            render();
+        } else {
+            console.log(json);
+        }
+
+    }
 
     /**
      * Post item to JSON
@@ -113,17 +138,14 @@ function addItem(){
             },
         }
 
-        fetch(url,fetchData)
-        .then(response => {
-            response.json().then(json => {
-            
-                if(json.length > 0) {
-                    json.forEach(element => items.push(element));
-                    render();
-                }
+        const response = await fetch(url,fetchData);
+        const json = await response.json();
 
-          });
-        });
+        if(json.length > 0) {
+            json.forEach(element => items.push(element));
+            render();
+        }
+
     }
 
 /**
@@ -136,8 +158,8 @@ function saveItem(index){
 
     items.splice(index, 1, _item);
 
-    removeItemFromJSON("http://localhost:8000/index.php", index);
-    postItemToJSON("http://localhost:8000/index.php", _item, index);
+    removeItemFromJSON("http://localhost:9000/index.php", index);
+    postItemToJSON("http://localhost:9000/index.php", _item, index);
 
     render();
 }
@@ -150,7 +172,7 @@ function removeItem(index){
     
     items.splice(index, 1);
 
-    removeItemFromJSON("http://localhost:8000/index.php", index);
+    removeItemFromJSON("http://localhost:9000/index.php", index);
 
     render();
 }
@@ -178,12 +200,12 @@ function itemHtml(index, item){
     ${item.editing ? '<input class="input-width edit-input mt-4 mt-sm-4 mt-md-1 mt-lg-1 mt-xl-1" id="input-item-'+index+'" type="text" value="'+item.message+'">' : '<span class="todo-text">'+item.message+'</span>'}
     </div>
     <div class="col-3 col-sm-3 col-md-5 col-lg-5 col-xl-5 d-flex justify-content-start align-self-center justify-content-sm-start justify-content-md-start justify-content-lg-start justify-content-xl-start pt-3">
-        <div ${!item.editing && 'hidden'} pb-3>
+        <div ${!item.editing && 'hidden'} class="pb-3">
            <button class="side-btn btn-success" onclick="saveItem(${index})"><i class="fas fa-save btn-icon"></i></button>
            <button class="side-btn btn-danger" onclick="toggleEditItem(${index})"><i class="fas fa-times btn-icon"></i></button>
         </div>
-        <div ${item.editing && 'hidden'} pb-3>
-           <button class="side-btn btn-warning type="button onclick="toggleEditItem(${index})"><i class="fas fa-pencil-alt btn-icon"></i></button>
+        <div ${item.editing && 'hidden'} class="pb-3">
+           <button class="side-btn btn-warning type="button" onclick="toggleEditItem(${index})"><i class="fas fa-pencil-alt btn-icon"></i></button>
            <button class="side-btn btn-danger type="button" onclick="removeItem(${index})"><i class="fas fa-trash-alt btn-icon"></i></i></button>
            </div>
         </div>
