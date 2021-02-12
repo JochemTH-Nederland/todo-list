@@ -1,0 +1,83 @@
+body {
+    background-color: #434747;
+    font-family: 'Londrina Solid', cursive;
+}
+
+#error-box {
+    color: red;
+}
+
+.btn-success {
+    background-color: green;
+}
+
+.btn-success:hover {
+    background-color: darkgreen;
+}
+
+.btn-danger {
+    background-color: red;
+}
+
+.btn-danger:hover {
+    background-color: darkred;
+}
+
+.btn-warning {
+    background-color: yellow;
+}
+
+.btn-warnin:hover {
+    background-color: darkorange;
+}
+
+.input-width {
+    width: 100%
+}
+
+.success-button-width {
+    width: 150px;
+}
+
+.container {
+    background-color: #242729;
+    box-shadow: 20px 18px 26px black;
+}
+
+.items {
+    margin: 5px;
+    margin-left: 15px;
+    padding: 15px;
+    background-color: #0f1112;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.small-box-shadow {
+    box-shadow: 5px 5px 5px black;
+}
+
+.todo-text {
+    font-size: 23px;
+}
+
+.btn {
+    font-size: 23px;
+}
+
+.side-btn {
+    font-size: 23px;
+    border-radius: 15%;
+    width:50px;
+    height:50px;
+    margin-bottom: 5px;
+}
+
+.edit-input {
+    margin: auto;
+}
+
+input {
+    font-size: 23px;
+}
