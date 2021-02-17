@@ -938,7 +938,13 @@ function _init() {
              * Initial content render
              */
 
-          case 1:
+            _context.next = 3;
+            return sendRequest("GET", "list-items", null);
+
+          case 3:
+            render();
+
+          case 4:
           case "end":
             return _context.stop();
         }
@@ -994,6 +1000,11 @@ function _addItem() {
 function sendRequest(_x, _x2) {
   return _sendRequest.apply(this, arguments);
 }
+/**
+ * Toggle editing of the item
+ * @param index
+ */
+
 
 function _sendRequest() {
   _sendRequest = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(method, route) {
@@ -1021,28 +1032,24 @@ function _sendRequest() {
           case 5:
             response = _context3.sent;
 
-            if (method === "GET") {
-              /*
-              const json = await response.json();
-               if(json.length > 0) {
-                  json.forEach(element => items.push(element));
-              }
-              */
+            if (!(method === "GET")) {
+              _context3.next = 11;
+              break;
             }
 
-            if (method === "POST") {//const json = await response.json();
-              //items[data.itemIndex] = json.item;
-              //render();
-            }
-
-            _context3.next = 10;
+            _context3.next = 9;
             return response.json();
 
-          case 10:
+          case 9:
             json = _context3.sent;
-            errorBox.innerHTML = json.errors.message;
 
-          case 12:
+            if (json.items.length > 0) {
+              json.items.forEach(function (element) {
+                return items.push(element);
+              });
+            }
+
+          case 11:
           case "end":
             return _context3.stop();
         }
@@ -1050,6 +1057,64 @@ function _sendRequest() {
     }, _callee3);
   }));
   return _sendRequest.apply(this, arguments);
+}
+
+function toggleEditItem(index) {
+  //console.log(index);
+  var item = items[index]; //console.log(item);
+
+  items.splice(index, 1, _objectSpread(_objectSpread({}, item), {}, {
+    editing: !item.editing
+  }));
+  render();
+}
+/**
+ * Single item HTML content
+ * @param index
+ * @param _item
+ * @returns {string}
+ */
+
+
+function itemHtml(index, item) {
+  return "<div class=\"row item\">\n    <div class=\"col-8 col-sm-8 col-md-6 col-lg-6 col-xl-6 pt-1 rounded items small-box-shadow pt-3\">\n    ".concat(item.editing ? '<input class="input-width edit-input mt-4 mt-sm-4 mt-md-1 mt-lg-1 mt-xl-1" id="input-item-' + index + '" type="text" value="' + item.message + '">' : '<span class="todo-text">' + item.message + '</span>', "\n    </div>\n    <div class=\"col-3 col-sm-3 col-md-5 col-lg-5 col-xl-5 d-flex justify-content-start align-self-center justify-content-sm-start justify-content-md-start justify-content-lg-start justify-content-xl-start pt-3\">\n        <div ").concat(!item.editing && 'hidden', " class=\"pb-3\">\n           <button class=\"side-btn btn-success\" onclick=\"saveItem(").concat(index, ")\"><i class=\"fas fa-save btn-icon\"></i></button>\n           <button class=\"side-btn btn-danger\"><i class=\"fas fa-times btn-icon\"></i></button>\n        </div>\n        <div ").concat(item.editing && 'hidden', " class=\"pb-3\">\n           <button data-id=\"toggleEdit-btn\" data-index=\"").concat(index, "\" class=\"side-btn btn-warning type=\"button\"><i class=\"fas fa-pencil-alt btn-icon\"></i></button>\n           <button class=\"side-btn btn-danger type=\"button\" onclick=\"removeItem(").concat(index, ")\"><i class=\"fas fa-trash-alt btn-icon\"></i></i></button>\n           </div>\n        </div>\n    </div>");
+}
+/**
+ * Render the items
+ *  - Clear todo list content
+ *  - Check for items
+ *  - Append items
+ */
+
+
+function render() {
+  todoListContent.innerHTML = "";
+
+  if (items.length <= 0) {
+    todoListContent.innerHTML = "No items in this list";
+    return;
+  }
+
+  items.forEach(function (item, index) {
+    var wrapper = document.createElement('template');
+    wrapper.innerHTML = itemHtml(index, item);
+    todoListContent.appendChild(wrapper.content.cloneNode(true));
+    document.querySelectorAll('[data-id="toggleEdit-btn"]').forEach(function (element) {
+      element.addEventListener('click', function (event) {
+        var target = event.target;
+        var index = target.dataset.index;
+        toggleEditItem(index);
+      });
+    });
+  }); // document
+  // .querySelectorAll('[data-id="toggleEdit-btn"]')
+  // .forEach((element) => {
+  //     element.addEventListener('click', (event) => {
+  //         const target = event.target;
+  //         const index = target.dataset.index;
+  //         toggleEditItem(index);
+  //     });
+  // });
 }
 
 init();
@@ -1063,8 +1128,8 @@ init();
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/niek/Documents/jochem/FirstLaravelWebsite/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/niek/Documents/jochem/FirstLaravelWebsite/resources/css/style.css */"./resources/css/style.css");
+__webpack_require__(/*! /home/niek/Documents/jochem/todo-list/FirstLaravelWebsite/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/niek/Documents/jochem/todo-list/FirstLaravelWebsite/resources/css/style.css */"./resources/css/style.css");
 
 
 /***/ })

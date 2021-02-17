@@ -1,17 +1,1 @@
-[
-  {
-    "itemIndex": 1,
-    "message": "Kristallen minen in de voortuin",
-    "editing": false
-  },
-  {
-    "itemIndex": 2,
-    "message": "Opzoek naar een goudhamster in het bos",
-    "editing": false
-  },
-  {
-    "itemIndex": 4,
-    "message": "Verjaardagskaart versturen naar de verstrooide buurman",
-    "editing": false
-  }
-]
+[{"message":"xx","editing":false,"createDate":"2021-02-05 12:45:48pm","updateDate":"2021-02-05 12:45:48pm"},{"message":"dfsdfsfdsa","editing":false,"createDate":"2021-02-05 12:46:08pm","updateDate":"2021-02-05 12:46:08pm"}]

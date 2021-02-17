@@ -9,14 +9,16 @@ use Illuminate\Support\Facades\Validator;
 class TodoListController extends Controller
 {
 
-
     public function listItems(){
+        $items = file_get_contents(storage_path("app/todolist.json"));
         return response()->json([
-            "items" => TodoListItem::all()
+            'items' => json_decode($items)
         ]);
-    }
+     }
 
     public function addItem(Request $request){
+
+        /*
         $validator = Validator::make($request->all(), [
             'item.message' => "required|string|max:255",
         ]);
@@ -30,6 +32,19 @@ class TodoListController extends Controller
         return response()->json([
             "id" => $todoListItem->id
         ]);
+        */
+
+        $items = [];
+        $items = json_decode(file_get_contents(storage_path("app/todolist.json")));
+
+        $validator = Validator::make($request->all(), [
+            'item.message' => "required|string|max:255",
+            'item.editing' => "required|boolean"
+        ])->validate();
+
+        array_push($items, $validator["item"]);
+
+        file_put_contents(storage_path("app/todolist.json"), json_encode($items,true));
     }
 
     public function removeItem($index){

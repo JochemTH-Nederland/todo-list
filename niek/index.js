@@ -8,7 +8,7 @@ const newItemInput = document.getElementById('new-item-input');
  *
  * @type {*[]}
  */
-const items = [];
+let items = [];
 
 /**
  * Example item
@@ -16,24 +16,25 @@ const items = [];
  */
 const item = {
     message: "",
-    editing: false
+    editing: false,
+    createDate: 0,
+    updateDate: 0
 }
 
 /**
  * Init the todo list
  */
-function init(){
+async function init(){
     /**
      * Add event listener to the button
      */
     addItemButton.addEventListener('click', (event) => addItem());
 
-    loadItemsFromJSON("http://localhost:9000/index.php");
+    await sendRequest("GET", null);
 
     /**
      * Initial content render
      */
-    render();
 }
 
 /**
@@ -53,12 +54,13 @@ async function addItem(){
 
     items.push(_item);
     newItemInput.value = "";
-    render();
 
     await sendRequest("POST", {
         itemIndex: items.length - 1,
         item: _item
     });
+
+    render();
 }
 
     async function sendRequest(method, data = null){
@@ -68,99 +70,44 @@ async function addItem(){
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: !!data && JSON.stringify(data)
         }
 
-        const response = await fetch('http://localhost:9000/index.php', fetchData);
-        const json = await response.json();
+        if(!!data) fetchData.body = JSON.stringify(data);
 
-        if(method === "GET" && json.length > 0) {
-            json.forEach(element => items.push(element));
-            render();
-        } else {
-            console.log(json);
+        const response = await fetch('http://localhost:8000/index.php', fetchData);
+
+        if(method === "GET") {
+            const json = await response.json();
+
+            if(json.length > 0) {
+                json.forEach(element => items.push(element));
+                render();
+            }
         }
 
-    }
+        if(method === "POST") {
+            const json = await response.json();
 
-    /**
-     * Post item to JSON
-     * @type {{url: string, data: object, id: int}}
-     */
-    function postItemToJSON(url = '', data = {}, id) {
-
-    let fetchData = {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            itemIndex: id,
-            ...data
-        })
-    };
-
-    fetch(url, fetchData)
-      .then(response => console.log(response.json));
-    };
-
-    /**
-     * Remove item to JSON
-     * @type {{url: string, id: int}}
-     */
-    function removeItemFromJSON(url = '', id) {
-
-        let fetchData = {
-            method: 'POST', // or 'PUT'
-            headers: {
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                itemIndex: id,
-                removeItems: true
-            })
-        };
-    
-        fetch(url, fetchData)
-          .then(response => console.log(response.json));
-        };
-
-    /**
-     * Load items from JSON
-     * @type {{url: string}}
-     */
-    async function loadItemsFromJSON(url = '') {
-    
-        let fetchData = {
-            method: 'GET', // or 'PUT'
-            headers: {
-            'Content-Type': 'application/json',
-            },
-        }
-
-        const response = await fetch(url,fetchData);
-        const json = await response.json();
-
-        if(json.length > 0) {
-            json.forEach(element => items.push(element));
+            items[data.itemIndex] = json.item;
             render();
         }
-
     }
-
+    
 /**
  * Save the new value of the item
  * @param index
  */
-function saveItem(index){
+async function saveItem(index){
     const value = document.getElementById('input-item-' + index).value;
     const _item = {message: value, editing: false};
 
     items.splice(index, 1, _item);
 
-    removeItemFromJSON("http://localhost:9000/index.php", index);
-    postItemToJSON("http://localhost:9000/index.php", _item, index);
-
+    await sendRequest("POST", {
+        itemIndex: index,
+        item: _item
+    });
+    
     render();
 }
 
@@ -168,11 +115,14 @@ function saveItem(index){
  * Remove item at the given index
  * @param index
  */
-function removeItem(index){
+async function removeItem(index){
     
     items.splice(index, 1);
 
-    removeItemFromJSON("http://localhost:9000/index.php", index);
+    await sendRequest("POST", {
+        itemIndex: index,
+        item: null
+    });
 
     render();
 }
@@ -191,10 +141,11 @@ function toggleEditItem(index){
 /**
  * Single item HTML content
  * @param index
- * @param item
+ * @param _item
  * @returns {string}
  */
 function itemHtml(index, item){
+
     return `<div class="row item">
     <div class="col-8 col-sm-8 col-md-6 col-lg-6 col-xl-6 pt-1 rounded items small-box-shadow pt-3">  
     ${item.editing ? '<input class="input-width edit-input mt-4 mt-sm-4 mt-md-1 mt-lg-1 mt-xl-1" id="input-item-'+index+'" type="text" value="'+item.message+'">' : '<span class="todo-text">'+item.message+'</span>'}
@@ -219,14 +170,21 @@ function itemHtml(index, item){
  *  - Append items
  */
 function render(){
+
+    items.sort(function(a, b)
+    {
+       if (a.updateDate > b.updateDate) return -1;
+       if (a.updateDate < b.updateDate) return 1;
+    })
+
+    console.log(items);
+
     todoListContent.innerHTML = "";
 
     if(items.length <= 0){
         todoListContent.innerHTML = "No items in this list";
         return;
     }
-
-    //todoListContent.append(`${items.length} items`)
 
     items.forEach((item, index) => {
         const wrapper = document.createElement('template');
